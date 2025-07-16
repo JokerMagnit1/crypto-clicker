@@ -80,16 +80,6 @@
   const boostBtn = document.getElementById("buyBoost");
   const withdrawBtn = document.getElementById("withdrawBtn");
 
-withdrawBtn.addEventListener("click", () => {
-  if (balance >= 0.0001) {
-    alert("✅ Запрос на вывод отправлен!");
-    balance = 0;
-    balanceEl.textContent = "Баланс: " + balance.toFixed(8) + " BTC";
-  } else {
-    alert("❌ Недостаточно BTC для вывода. Нужно минимум 0.00010000 BTC");
-  }
-});
-
   // Обработка клика по биткоину
   btcBtn.addEventListener("click", () => {
     balance += btcPerClick;
@@ -126,6 +116,15 @@ withdrawBtn.addEventListener("click", () => {
       alert("❌ Недостаточно BTC или буст уже куплен.");
     }
   });
+    withdrawBtn.addEventListener("click", () => {
+  if (balance >= 0.0001) {
+    alert("✅ Запрос на вывод отправлен!");
+    balance = 0;
+    balanceEl.textContent = "Баланс: " + balance.toFixed(8) + " BTC";
+  } else {
+    alert("❌ Недостаточно BTC для вывода. Нужно минимум 0.00010000 BTC");
+  }
+});
 </script>
 </body>
 </html>
