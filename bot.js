@@ -3,18 +3,6 @@ const token = '8098721049:AAGRrKEbOnqsAKDubJqVGX-x9R4vhcPxv_Y'; // ← вста�
 const bot = new TelegramBot(token, { polling: true });
 const withdrawBtn = document.getElementById("withdrawBtn");
 
-withdrawBtn.addEventListener("click", () => {
-  if (balance >= 0.0001) {
-    alert("✅ Запрос на вывод отправлен! (реализация вывода — зависит от тебя 😉)");
-    // Отправка на сервер, если нужно:
-    // fetch("/withdraw", { method: "POST", body: JSON.stringify({ userId, amount: balance }) })
-    balance = 0;
-    balanceEl.textContent = "Баланс: " + balance.toFixed(8) + " BTC";
-  } else {
-    alert("❌ Недостаточно BTC для вывода. Минимум: 0.00010000 BTC");
-  }
-});
-
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, `👋 Привет, ${msg.from.first_name}!\nНажми /play, чтобы открыть игру.`);
 });
@@ -32,4 +20,21 @@ bot.onText(/\/play/, (msg) => {
       ]]
     }
   });
+});
+
+withdrawBtn.addEventListener("click", () => {
+  if (balance >= 0.0001) {
+    alert("✅ Запрос на вывод отправлен! (вывод работает как игровая симуляция)");
+    balance = 0;
+    balanceEl.textContent = "Баланс: " + balance.toFixed(8) + " BTC";
+    
+    // Можно добавить отправку на сервер:
+    // fetch("https://crypto-clicker.onrender.com/withdraw", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ userId, amount: balance })
+    // });
+  } else {
+    alert("❌ Недостаточно BTC для вывода. Нужно минимум: 0.00010000 BTC");
+  }
 });
