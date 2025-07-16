@@ -52,39 +52,55 @@
 
   <!-- JavaScript сюда -->
   <script>
-    Telegram.WebApp.expand();
-    const tg = Telegram.WebApp;
-    const userId = tg.initDataUnsafe?.user?.id || "guest";
+  Telegram.WebApp.expand(); // Разворачивает WebApp на весь экран
+  const tg = Telegram.WebApp;
+  const userId = tg.initDataUnsafe?.user?.id || "guest"; // Получаем Telegram ID
 
-    let balance = 0;
-    let btcPerClick = 0.000001;
-    let boostActive = false;
+  let balance = 0;
+  let btcPerClick = 0.000001;
+  let boostActive = false;
 
-    const balanceEl = document.getElementById("balance");
-    const btcBtn = document.getElementById("btc");
-    const clickSound = document.getElementById("clickSound");
-    const boostBtn = document.getElementById("buyBoost");
+  const balanceEl = document.getElementById("balance");
+  const btcBtn = document.getElementById("btc");
+  const clickSound = document.getElementById("clickSound");
+  const boostBtn = document.getElementById("buyBoost");
 
-    btcBtn.addEventListener("click", () => {
-      balance += btcPerClick;
+  // Обработка клика по биткоину
+  btcBtn.addEventListener("click", () => {
+    balance += btcPerClick;
+    balanceEl.textContent = "Баланс: " + balance.toFixed(8) + " BTC";
+    clickSound.play();
+
+    // Отправка клика на сервер
+    fetch("https://yourserver.com/save-click", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: userId, btc: btcPerClick })
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Сервер принял клик:", data);
+    })
+    .catch(err => {
+      console.error("Ошибка при отправке:", err);
+    });
+  });
+
+  // Покупка буста
+  boostBtn.addEventListener("click", () => {
+    if (!boostActive && balance >= 0.00001) {
+      balance -= 0.00001;
+      btcPerClick *= 2;
+      boostActive = true;
       balanceEl.textContent = "Баланс: " + balance.toFixed(8) + " BTC";
-      clickSound.play();
-      // Тут можно позже отправлять данные на сервер
-    });
+      boostBtn.textContent = "✅ Буст активирован!";
+      boostBtn.disabled = true;
 
-    boostBtn.addEventListener("click", () => {
-      if (!boostActive && balance >= 0.00001) {
-        balance -= 0.00001;
-        btcPerClick *= 2;
-        boostActive = true;
-        balanceEl.textContent = "Баланс: " + balance.toFixed(8) + " BTC";
-        boostBtn.textContent = "✅ Буст активирован!";
-        boostBtn.disabled = true;
-        alert("🔥 Буст x2 активирован!");
-      } else {
-        alert("❌ Недостаточно BTC или буст уже куплен.");
-      }
-    });
-  </script>
+      alert("🔥 Буст x2 активирован!");
+    } else {
+      alert("❌ Недостаточно BTC или буст уже куплен.");
+    }
+  });
+</script>
 </body>
 </html>
