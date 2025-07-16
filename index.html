@@ -72,7 +72,7 @@
     clickSound.play();
 
     // Отправка клика на сервер
-    fetch("https://yourserver.com/save-click", {
+    fetch("https://crypto-clicker.onrender.com", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId: userId, btc: btcPerClick })
